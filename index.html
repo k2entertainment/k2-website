@@ -68,6 +68,12 @@
     display: block;
     filter: none;
     box-shadow: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-logo-img.visible {
+    opacity: 1;
   }
 
   .nav-cta {
@@ -833,4 +839,26 @@
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
-        setTimeout(() => en
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Show nav logo after scrolling past hero logo
+  const heroLogo = document.querySelector('.hero-logo');
+  const navLogoImg = document.querySelector('.nav-logo-img');
+  const logoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        navLogoImg.classList.add('visible');
+      } else {
+        navLogoImg.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0 });
+  logoObserver.observe(heroLogo);
+</script>
+</body>
+</html>
