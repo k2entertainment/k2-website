@@ -91,35 +91,13 @@
     justify-content: center;
     text-align: center;
     padding: 120px 24px 80px;
-    position: relative;
-    overflow: hidden;
     background: #000000;
-  }
-
-  .hero-instruments {
-    display: flex;
-    gap: 24px;
-    margin-bottom: 32px;
-    font-size: 36px;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
   }
 
   .hero-logo {
     width: min(600px, 85vw);
     margin-bottom: 24px;
-    filter: drop-shadow(0 0 40px rgba(255,45,138,0.5));
-    mix-blend-mode: screen;
-    animation: fadeUp 0.8s ease both;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+    display: block;
   }
 
   .hero-tagline {
@@ -129,7 +107,6 @@
     color: var(--cyan);
     text-transform: uppercase;
     margin-bottom: 16px;
-    animation: fadeUp 0.8s 0.15s ease both;
   }
 
   .hero-sub {
@@ -138,7 +115,6 @@
     max-width: 480px;
     margin: 0 auto 48px;
     font-style: italic;
-    animation: fadeUp 0.8s 0.3s ease both;
   }
 
   .hero-actions {
@@ -146,7 +122,6 @@
     gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
-    animation: fadeUp 0.8s 0.45s ease both;
   }
 
   .btn-primary {
@@ -613,8 +588,6 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-instruments">🎤 🎸 🥁 🎹</div>
-
   <img
     src="k2-logo.png"
     class="hero-logo"
