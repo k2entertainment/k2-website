@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karaoke 2.0 — The Future of Venue Entertainment</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF2D8A;
+    --cyan: #00E5FF;
+    --yellow: #FFD600;
+    --green: #00FF88;
+    --navy: #0D1120;
+    --navy2: #131929;
+    --navy3: #1a2238;
+    --text: #E8EAF0;
+    --muted: #8892A4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  h1, h2, h3, .bebas { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(13,17,32,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: var(--pink);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .nav-logo span { color: white; }
+
+  .nav-cta {
+    background: var(--pink);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 24px;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: #ff5aaa; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,45,138,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,45,138,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(255,45,138,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-instruments {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 32px;
+    font-size: 36px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .hero-logo {
+    width: min(600px, 85vw);
+    margin-bottom: 24px;
+    filter: drop-shadow(0 0 40px rgba(255,45,138,0.5));
+    animation: fadeUp 0.8s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tagline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(16px, 3vw, 22px);
+    letter-spacing: 0.25em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 48px;
+    font-style: italic;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.45s ease both;
+  }
+
+  .btn-primary {
+    background: var(--pink);
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+    transition: all 0.2s;
+    box-shadow: 0 0 30px rgba(255,45,138,0.4);
+  }
+
+  .btn-primary:hover {
+    background: #ff5aaa;
+    box-shadow: 0 0 50px rgba(255,45,138,0.6);
+    transform: translateY(-2px);
+  }
+
+  .btn-ghost {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 16px 36px;
+    transition: all 0.2s;
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    transform: translateY(-2px);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    background: var(--navy2);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 40px 24px;
+  }
+
+  .stats-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-item:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-num.pink { color: var(--pink); }
+  .stat-num.cyan { color: var(--cyan); }
+  .stat-num.yellow { color: var(--yellow); }
+  .stat-num.green { color: var(--green); }
+
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 96px 24px;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    color: var(--pink);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 0.95;
+    margin-bottom: 48px;
+  }
+
+  /* PROBLEM SECTION */
+  .problem-bg { background: var(--navy2); }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .problem-card {
+    background: var(--navy);
+    padding: 32px;
+    border-left: 3px solid;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+  }
+
+  .problem-card:nth-child(1) { border-color: var(--pink); }
+  .problem-card:nth-child(2) { border-color: var(--cyan); }
+  .problem-card:nth-child(3) { border-color: var(--yellow); }
+  .problem-card:nth-child(4) { border-color: var(--green); }
+
+  .problem-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .problem-card:nth-child(1) .problem-title { color: var(--pink); }
+  .problem-card:nth-child(2) .problem-title { color: var(--cyan); }
+  .problem-card:nth-child(3) .problem-title { color: var(--yellow); }
+  .problem-card:nth-child(4) .problem-title { color: var(--green); }
+
+  .problem-text { color: var(--muted); font-size: 15px; }
+
+  /* HOW IT WORKS */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    align-items: start;
+    background: var(--navy2);
+    padding: 40px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+  }
+
+  .step:hover { background: var(--navy3); }
+
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 0.85;
+    color: rgba(255,255,255,0.06);
+    letter-spacing: -0.02em;
+    user-select: none;
+  }
+
+  .step-content {}
+
+  .step-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--cyan);
+    margin-bottom: 12px;
+  }
+
+  .step-text { color: var(--muted); font-size: 15px; line-height: 1.7; }
+
+  .step-note {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-style: italic;
+    color: var(--pink);
+  }
+
+  /* INCLUDED */
+  .included-bg { background: var(--navy2); }
+
+  .included-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .included-block {
+    background: var(--navy);
+    padding: 40px;
+  }
+
+  .included-block-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.2em;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .we { color: var(--green); }
+  .you { color: var(--yellow); }
+
+  .included-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .included-list li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  .included-list li::before {
+    content: '▸';
+    color: var(--green);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .you-list li::before { color: var(--yellow); }
+
+  .setup-note {
+    margin-top: 32px;
+    padding: 20px 32px;
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.2);
+    text-align: center;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 0.05em;
+  }
+
+  /* PILOT */
+  .pilot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 48px;
+  }
+
+  .pilot-card {
+    background: var(--navy2);
+    padding: 32px;
+    position: relative;
+  }
+
+  .pilot-card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .pilot-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: var(--cyan);
+    margin-bottom: 8px;
+  }
+
+  .pilot-card-text {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* CONTACT */
+  .contact-bg { background: var(--navy2); }
+
+  .contact-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .contact-card {
+    background: var(--navy3);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 56px 48px;
+    margin-top: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--pink), var(--cyan));
+  }
+
+  .contact-card::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    right: -80px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255,45,138,0.1) 0%, transparent 70%);
+  }
+
+  .contact-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .contact-title {
+    color: var(--yellow);
+    font-size: 14px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-weight: 600;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover { color: var(--pink); }
+
+  .contact-link-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,45,138,0.15);
+    border: 1px solid rgba(255,45,138,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .next-steps {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 32px;
+    text-align: left;
+  }
+
+  .next-steps-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .next-step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .next-step:last-child { margin-bottom: 0; }
+
+  .next-step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--pink);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 24px;
+  }
+
+  .next-step-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+
+  footer strong { color: var(--pink); }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    nav { padding: 16px 20px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .stat-item:nth-child(2) { border-right: none; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .step { grid-template-columns: 1fr; gap: 0; }
+    .step-num { font-size: 40px; margin-bottom: 8px; }
+    .included-cols { grid-template-columns: 1fr; }
+    .pilot-grid { grid-template-columns: 1fr; }
+    .contact-card { padding: 36px 24px; }
+    section { padding: 64px 16px; }
+  }
+
+  /* ANIMATIONS ON SCROLL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo" style="display:flex;align-items:center;"><img src="k2-logo.png" alt="Karaoke 2.0" style="height:28px;filter:drop-shadow(0 0 8px rgba(255,45,138,0.4));"></a>
+  <a href="#contact" class="nav-cta">Book a Demo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-instruments">🎤 🎸 🥁 🎹</div>
+
+  <div style="background:#000; padding:16px 48px; margin-bottom:24px; display:inline-block; animation:fadeUp 0.8s ease both;">
+    <img
+      src="k2-logo.png"
+      class="hero-logo"
+      alt="Karaoke 2.0"
+      style="margin-bottom:0; display:block;"
+    />
+  </div>
+
+  <p class="hero-tagline">The Future of Venue Entertainment</p>
+  <p class="hero-sub">Turning your karaoke nights into a revenue engine</p>
+
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Book a Free Demo</a>
+    <a href="#how" class="btn-ghost">See How It Works</a>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar reveal">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num pink">+40%</div>
+      <div class="stat-label">Dwell Time</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num cyan">+130%</div>
+      <div class="stat-label">F&B Revenue</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num yellow">4×</div>
+      <div class="stat-label">Stage Engagement</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num green">100%</div>
+      <div class="stat-label">Data Capture</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-bg" id="problem">
+  <div class="container">
+    <span class="section-label reveal">The Problem</span>
+    <h2 class="section-title reveal">You already<br>know these.</h2>
+    <p style="color:var(--muted); margin-bottom:48px; font-style:italic;" class="reveal">The question is — what are you going to do about them?</p>
+
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-title">Dead Wait Times</div>
+        <p class="problem-text">Patrons wait 30–60 minutes with nothing to do. They get restless, stop ordering, and eventually leave.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-title">Revenue Plateau</div>
+        <p class="problem-text">Traditional karaoke doesn't incentivize spending. No connection between queue position and bar tab.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-title">Low Engagement</div>
+        <p class="problem-text">Only 1 person sings at a time. Everyone else is just sitting there — bored.</p>
+      </div>
+      <div class="problem-card reveal">
+        <div class="problem-title">Missed F&B Sales</div>
+        <p class="problem-text">No easy way to order from the table. Staff can't keep up during peak hours. Orders slip through the cracks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <span class="section-label reveal">How It Works</span>
+    <h2 class="section-title reveal">Three things.<br>That's it.</h2>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">📱 Scan &amp; Join</div>
+          <p class="step-text">Patron scans a QR code at their table. Sets a stage name, picks a song and an instrument. Their band joins the queue automatically.</p>
+          <span class="step-note">No app download. No account creation. Takes about 30 seconds.</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">🎸 Play Together</div>
+          <p class="step-text">The band takes the stage — Vocals, guitar, and drums. Keys can even play from the table for the stage-shy. Dynamic difficulty makes everyone sound great.</p>
+          <span class="step-note">4 people on stage instead of 1. More energy, more engagement, more fun.</span>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">🛒 Order From Your Seat</div>
+          <p class="step-text">While waiting (or anytime), patrons browse your full food and drink menu on their phone and order directly. Orders go to your bar or kitchen tablet instantly.</p>
+          <span class="step-note">Higher tabs. Faster service. Spending more means playing sooner.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INCLUDED -->
+<section class="included-bg" id="included">
+  <div class="container">
+    <span class="section-label reveal">What's Included</span>
+    <h2 class="section-title reveal">We handle<br>the tech.</h2>
+
+    <div class="included-cols">
+      <div class="included-block reveal">
+        <div class="included-block-title we">✅ WE PROVIDE</div>
+        <ul class="included-list">
+          <li>10×10ft holographic stage display — custom-built, immersive game visuals</li>
+          <li>Performance PC — pre-loaded with game engine and song catalog</li>
+          <li>Dedicated WiFi router — fast local network for patron devices</li>
+          <li>Performance equipment — microphone, guitar, drums, &amp; keys</li>
+          <li>Custom QR table cards — branded for your venue</li>
+          <li>On-site setup, staff training, and ongoing remote support</li>
+        </ul>
+      </div>
+      <div class="included-block reveal">
+        <div class="included-block-title you">📋 YOU PROVIDE</div>
+        <ul class="included-list you-list">
+          <li>Stage area — ~10 ft wide with 10 ft clearance behind for the holographic display</li>
+          <li>A sound system (or we can recommend one)</li>
+          <li>A power outlet near the stage area</li>
+          <li>Your menu assets</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="setup-note reveal">
+      Setup takes less than 2 hours. You can go live the same night.
+    </div>
+  </div>
+</section>
+
+<!-- PILOT PROGRAM -->
+<section id="pilot">
+  <div class="container">
+    <span class="section-label reveal">Founding Venue Program</span>
+    <h2 class="section-title reveal">The risk is<br>on us.</h2>
+    <p style="color:var(--muted); max-width:560px; margin-bottom:48px; font-size:16px;" class="reveal">Karaoke 2.0 is a new product. We're not going to pretend otherwise. What we will tell you is that it works, it's ready, and we've built the pilot to put the risk on us — not you.</p>
+
+    <div class="pilot-grid">
+      <div class="pilot-card reveal">
+        <div class="pilot-card-icon">📅</div>
+        <div class="pilot-card-title">No Long-Term Commitment</div>
+        <p class="pilot-card-text">Pilot runs 60 days. If it's not working for your room, shake hands and walk away.</p>
+      </div>
+      <div class="pilot-card reveal">
+        <div class="pilot-card-icon">💰</div>
+        <div class="pilot-card-title">Founding Rate — Locked 1 Year</div>
+        <p class="pilot-card-text">The lowest price we'll ever offer, guaranteed for your first 12 months.</p>
+      </div>
+      <div class="pilot-card reveal">
+        <div class="pilot-card-icon">⚙️</div>
+        <div class="pilot-card-title">We Handle Everything</div>
+        <p class="pilot-card-text">Hardware, setup, training, and ongoing support. You don't need an IT department.</p>
+      </div>
+      <div class="pilot-card reveal">
+        <div class="pilot-card-icon">🎯</div>
+        <div class="pilot-card-title">Your Feedback Drives the Product</div>
+        <p class="pilot-card-text">Tell us what works and what doesn't. Your feature requests go to the front of the line.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--navy2); padding:32px 40px; margin-top:2px;" class="reveal">
+      <p style="font-family:'Bebas Neue',sans-serif; font-size:14px; letter-spacing:0.2em; color:var(--muted); margin-bottom:16px;">PUT IT IN PERSPECTIVE</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="color:var(--pink); flex-shrink:0;">▸</span>
+          <span style="color:var(--text);">One busy karaoke night already covers a month of K2</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="color:var(--pink); flex-shrink:0;">▸</span>
+          <span style="color:var(--text);">A single table ordering an extra round per hour pays for the system</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <span style="color:var(--pink); flex-shrink:0;">▸</span>
+          <span style="color:var(--text);">If K2 adds even one extra hour of dwell time per table, it's profitable on night one</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-bg" id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <span class="section-label">Let's Build Your</span>
+      <h2 class="section-title reveal" style="color:var(--yellow);">BIG BREAK</h2>
+      <p style="color:var(--muted); font-size:16px;" class="reveal">Ready to see it in action? We'll bring the system to your venue for a live demo — no commitment required.</p>
+
+      <div class="contact-card reveal">
+        <div class="contact-name">Tim Pham</div>
+        <div class="contact-title">CEO, Karaoke 2.0</div>
+
+        <div class="contact-links">
+          <a href="mailto:tim@karaoke2.com" class="contact-link">
+            <div class="contact-link-icon">✉</div>
+            tim@karaoke2.com
+          </a>
+          <a href="tel:7142516078" class="contact-link">
+            <div class="contact-link-icon">📞</div>
+            (714) 251-6078
+          </a>
+        </div>
+
+        <div class="next-steps">
+          <div class="next-steps-title">WHAT HAPPENS NEXT</div>
+          <div class="next-step">
+            <div class="next-step-num">1</div>
+            <div class="next-step-text">We visit your venue and assess the setup — free, no obligation</div>
+          </div>
+          <div class="next-step">
+            <div class="next-step-num">2</div>
+            <div class="next-step-text">We demo the full system live — you'll see exactly how it works</div>
+          </div>
+          <div class="next-step">
+            <div class="next-step-num">3</div>
+            <div class="next-step-text">If it's a fit, we install and you go live in under 2 hours</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>karaoke2.com</strong> &nbsp;·&nbsp; © 2026 K2 Entertainment LLC &nbsp;·&nbsp; Las Vegas, NV &nbsp;·&nbsp; Confidential — Venue Partnership</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => en
