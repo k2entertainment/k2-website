@@ -58,16 +58,17 @@
   }
 
   .nav-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 26px;
-    color: var(--pink);
-    letter-spacing: 0.08em;
-    text-decoration: none;
-    text-shadow: none;
-    filter: none;
+    display: flex;
+    align-items: center;
   }
 
-  .nav-logo span { color: white; }
+  .nav-logo-img {
+    height: 36px;
+    width: auto;
+    display: block;
+    filter: none;
+    box-shadow: none;
+  }
 
   .nav-cta {
     background: var(--pink);
@@ -587,7 +588,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">KARAOKE <span>2.0</span></a>
+  <a href="#" class="nav-logo"><img src="k2-logo.png" alt="Karaoke 2.0" class="nav-logo-img"/></a>
   <a href="#contact" class="nav-cta">Book a Demo</a>
 </nav>
 
